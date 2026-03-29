@@ -121,15 +121,20 @@ USE_TZ = os.getenv("USE_TZ", "True").lower() == "true"
 # --------------------------------------------------
 # MEDIA
 # --------------------------------------------------
-MEDIA_ROOT = os.path.join(
-    BASE_DIR, os.getenv("MEDIA_ROOT", "media")
-)
+# --------------------------------------------------
+# MEDIA
+# --------------------------------------------------
+# --------------------------------------------------
+# MEDIA
+# --------------------------------------------------
+MEDIA_ROOT = BASE_DIR / os.getenv("MEDIA_ROOT", "media")
 MEDIA_URL = os.getenv("MEDIA_URL", "/media/")
 
 # --------------------------------------------------
 # STATIC
 # --------------------------------------------------
-STATIC_URL = os.getenv("STATIC_URL", "static/")
+STATIC_URL = os.getenv("STATIC_URL", "/static/")
+STATIC_ROOT = BASE_DIR / os.getenv("STATIC_ROOT", "staticfiles")
 
 # --------------------------------------------------
 # DEFAULT FIELD
