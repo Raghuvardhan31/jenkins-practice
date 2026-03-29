@@ -1,0 +1,111 @@
+# Django
+*.log
+*.pot
+*.pyc
+__pycache__/
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+/media
+/static
+/staticfiles
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Virtual environments
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.venv
+
+# IDE and Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+.project
+.pydevproject
+.settings/
+*.code-workspace
+
+# OS
+Thumbs.db
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# Python
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+xunit.xml
+coverage.xml
+*.cover
+.pytest_cache/
+htmlcov/
+
+# Development
+*.sqlite
+*.db
+local_settings.py
+secrets.json
+
+# Dependency directories (should be updated in .gitignore)
+node_modules/
+npm-debug.log
+
+# CI/CD
+.jenkins/
+jenkins.log
+
+# Misc
+.idea/
+*.iml
+.vscode/
+.env.example
+
+# Media files and uploads (if not version controlled)
+media/
+
+# Compiled files
+*.class
+*.jar
+
+# Django migrations (optional - usually tracked)
+# migrations/
+
+# Shell scripts
+*.sh
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# Temporary files
+tmp/
+temp/
+*.tmp
