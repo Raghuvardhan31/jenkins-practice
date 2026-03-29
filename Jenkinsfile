@@ -119,7 +119,22 @@ pipeline {
                 '''
             }
         }
-    }
+        stage('Deploy Application (CD)') {
+            steps {
+                sh '''
+                    echo "Starting Deployment..."
+
+                    # Kill old running Django runserver
+                    pkill -f "manage.py runserver" || true
+
+                    # Start Django server in background
+                    nohup ${VENV_DIR}/bin/python manage.py runserver 0.0.0.0:8000 > server.log 2>&1 &
+
+                    echo "Deployment completed. Server started at port 8000"
+                '''
+            }
+        }
+                }
 
     post {
         success {
