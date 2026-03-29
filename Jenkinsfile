@@ -5,7 +5,7 @@ pipeline {
         SECRET_KEY = credentials('SECRET_KEY')
         DB_PASSWORD = credentials('DB_PASSWORD')
 
-        DEBUG = 'True'
+        DEBUG = 'False'
         ALLOWED_HOSTS = '*'
         CORS_ALLOW_ALL_ORIGINS = 'True'
 
