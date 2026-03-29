@@ -37,8 +37,26 @@ pipeline {
                     echo "Starting Django Jenkins Pipeline"
                     pwd
                     ls -la
-                    python3 --version
-                    which python3
+                    echo "Python path:"
+                    which python3 || true
+                    echo "Python version:"
+                    python3 --version || true
+                    echo "Available python binaries:"
+                    ls -l /usr/bin/python* || true
+                '''
+            }
+        }
+
+        stage('Check python3-venv Support') {
+            steps {
+                sh '''
+                    echo "Checking whether venv module works..."
+                    python3 -m venv --help > /dev/null 2>&1 || {
+                        echo "ERROR: python3 venv support is missing on Jenkins server."
+                        echo "Install it on Ubuntu/Debian using:"
+                        echo "sudo apt update && sudo apt install -y python3.12-venv"
+                        exit 1
+                    }
                 '''
             }
         }
@@ -48,6 +66,15 @@ pipeline {
                 sh '''
                     rm -rf ${VENV_DIR}
                     python3 -m venv ${VENV_DIR}
+                    test -x ${VENV_DIR}/bin/python
+                '''
+            }
+        }
+
+        stage('Upgrade Pip') {
+            steps {
+                sh '''
+                    ${VENV_DIR}/bin/python -m pip install --upgrade pip setuptools wheel
                 '''
             }
         }
@@ -55,7 +82,6 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 sh '''
-                    ${VENV_DIR}/bin/python -m pip install --upgrade pip
                     ${VENV_DIR}/bin/pip install -r requirements.txt
                 '''
             }
@@ -64,8 +90,11 @@ pipeline {
         stage('Verify Installed Packages') {
             steps {
                 sh '''
+                    ${VENV_DIR}/bin/python --version
+                    ${VENV_DIR}/bin/pip --version
                     ${VENV_DIR}/bin/pip show Django || true
                     ${VENV_DIR}/bin/pip show python-dotenv || true
+                    ${VENV_DIR}/bin/pip list
                 '''
             }
         }
