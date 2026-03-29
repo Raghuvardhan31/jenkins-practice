@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         SECRET_KEY = credentials('SECRET_KEY')
+        DB_PASSWORD = credentials('DB_PASSWORD')
 
         DEBUG = 'False'
         ALLOWED_HOSTS = '*'
@@ -11,7 +12,6 @@ pipeline {
         DB_ENGINE = 'django.db.backends.sqlite3'
         DB_NAME = 'fouzi'
         DB_USER = 'postgres'
-        DB_PASSWORD = credentials('DB_PASSWORD')
         DB_HOST = 'localhost'
         DB_PORT = '5432'
 
@@ -26,41 +26,60 @@ pipeline {
         DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
         ROOT_URLCONF = 'BMS.urls'
         WSGI_APPLICATION = 'BMS.wsgi.application'
+
+        VENV_DIR = 'venv'
     }
 
     stages {
         stage('Show Environment Info') {
             steps {
-                sh 'echo "Starting Django Jenkins Pipeline"'
-                sh 'pwd'
-                sh 'ls -la'
-                sh 'python3 --version'
+                sh '''
+                    echo "Starting Django Jenkins Pipeline"
+                    pwd
+                    ls -la
+                    python3 --version
+                    which python3
+                '''
             }
         }
 
         stage('Create Virtual Environment') {
             steps {
-                sh 'python3 -m venv venv'
+                sh '''
+                    if ! python3 -m venv ${VENV_DIR}; then
+                        echo "ERROR: Virtual environment creation failed."
+                        echo "Install python3.12-venv on Jenkins server:"
+                        echo "sudo apt update && sudo apt install -y python3.12-venv"
+                        exit 1
+                    fi
+                '''
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                sh '. venv/bin/activate && python -m pip install --upgrade pip'
-                sh '. venv/bin/activate && pip install -r requirements.txt'
+                sh '''
+                    ${VENV_DIR}/bin/python -m pip install --upgrade pip
+                    ${VENV_DIR}/bin/pip install -r requirements.txt
+                '''
             }
         }
 
         stage('Verify Installed Packages') {
             steps {
-                sh '. venv/bin/activate && pip show python-dotenv'
-                sh '. venv/bin/activate && pip show Django'
+                sh '''
+                    ${VENV_DIR}/bin/pip show Django || true
+                    ${VENV_DIR}/bin/pip show python-dotenv || true
+                    ${VENV_DIR}/bin/pip list
+                '''
             }
         }
 
         stage('Run Django Check') {
             steps {
-                sh '. venv/bin/activate && python manage.py check'
+                sh '''
+                    ${VENV_DIR}/bin/python manage.py check
+                '''
             }
         }
     }
