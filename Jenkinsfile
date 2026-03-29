@@ -37,26 +37,8 @@ pipeline {
                     echo "Starting Django Jenkins Pipeline"
                     pwd
                     ls -la
-                    echo "Python path:"
-                    which python3 || true
-                    echo "Python version:"
-                    python3 --version || true
-                    echo "Available python binaries:"
-                    ls -l /usr/bin/python* || true
-                '''
-            }
-        }
-
-        stage('Check python3-venv Support') {
-            steps {
-                sh '''
-                    echo "Checking whether venv module works..."
-                    python3 -m venv --help > /dev/null 2>&1 || {
-                        echo "ERROR: python3 venv support is missing on Jenkins server."
-                        echo "Install it on Ubuntu/Debian using:"
-                        echo "sudo apt update && sudo apt install -y python3.12-venv"
-                        exit 1
-                    }
+                    which python3
+                    python3 --version
                 '''
             }
         }
@@ -93,8 +75,23 @@ pipeline {
                     ${VENV_DIR}/bin/python --version
                     ${VENV_DIR}/bin/pip --version
                     ${VENV_DIR}/bin/pip show Django || true
-                    ${VENV_DIR}/bin/pip show python-dotenv || true
-                    ${VENV_DIR}/bin/pip list
+                    ${VENV_DIR}/bin/pip show djangorestframework || true
+                '''
+            }
+        }
+
+        stage('Run Makemigrations') {
+            steps {
+                sh '''
+                    ${VENV_DIR}/bin/python manage.py makemigrations --noinput
+                '''
+            }
+        }
+
+        stage('Run Migrate') {
+            steps {
+                sh '''
+                    ${VENV_DIR}/bin/python manage.py migrate --noinput
                 '''
             }
         }
@@ -103,6 +100,22 @@ pipeline {
             steps {
                 sh '''
                     ${VENV_DIR}/bin/python manage.py check
+                '''
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh '''
+                    ${VENV_DIR}/bin/python manage.py test
+                '''
+            }
+        }
+
+        stage('Collect Static') {
+            steps {
+                sh '''
+                    ${VENV_DIR}/bin/python manage.py collectstatic --noinput
                 '''
             }
         }
