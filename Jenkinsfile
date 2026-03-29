@@ -46,12 +46,8 @@ pipeline {
         stage('Create Virtual Environment') {
             steps {
                 sh '''
-                    if ! python3 -m venv ${VENV_DIR}; then
-                        echo "ERROR: Virtual environment creation failed."
-                        echo "Install python3.12-venv on Jenkins server:"
-                        echo "sudo apt update && sudo apt install -y python3.12-venv"
-                        exit 1
-                    fi
+                    rm -rf ${VENV_DIR}
+                    python3 -m venv ${VENV_DIR}
                 '''
             }
         }
@@ -70,7 +66,6 @@ pipeline {
                 sh '''
                     ${VENV_DIR}/bin/pip show Django || true
                     ${VENV_DIR}/bin/pip show python-dotenv || true
-                    ${VENV_DIR}/bin/pip list
                 '''
             }
         }
