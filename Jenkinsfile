@@ -16,9 +16,17 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh 'echo "Files in Workspace:"'
+                sh 'echo "Running test stage"'
+            }
+        }
+
+        stage('System Info') {
+            steps {
+                sh 'echo "Current folder:"'
+                sh 'pwd'
+                sh 'echo "Files:"'
                 sh 'ls -la'
-                sh 'echo "Git Version:"'
+                sh 'echo "Git version:"'
                 sh 'git --version'
             }
         }
