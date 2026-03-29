@@ -16,7 +16,12 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh 'echo "Running test stage"'
+                sh 'echo "Current Directory:"'
+                sh 'pwd'
+                sh 'echo "Files in Workspace:"'
+                sh 'ls -la'
+                sh 'echo "Git Version:"'
+                sh 'git --version'
             }
         }
     }
