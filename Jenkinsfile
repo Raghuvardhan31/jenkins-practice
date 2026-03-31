@@ -10,9 +10,9 @@ pipeline {
         CORS_ALLOW_ALL_ORIGINS = 'True'
 
         DB_ENGINE = 'django.db.backends.sqlite3'
-        DB_NAME = 'fouzi'
+        DB_NAME = credentials('DB_NAME')
         DB_USER = 'postgres'
-        DB_HOST = 'localhost'
+        DB_HOST = credentials('DB_HOST')
         DB_PORT = '5432'
 
         LANGUAGE_CODE = 'en-us'
